@@ -1,0 +1,27 @@
+---
+title: "create sample"
+output: html_document
+---
+
+File to get a random sample from predictions created by one of the Bi-LSTM models. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+
+```{r}
+preds <- read.delim('fasttext_abusive_custom.txt', sep='\t', header = TRUE)
+test <- read.delim('abusivetest.tsv', sep='\t', header=FALSE)
+preds$ID <- seq.int(nrow(preds))
+test$ID <- seq.int(nrow(test))
+data <- merge(preds,test)
+set.seed(42)
+data <- data %>% select(V1, prediction, V2)
+sampleset <- data[sample(nrow(data), 393), ]
+write.table(sampleset, file='fasttext_abusive_custom_sample.txt', sep='\t')
+```
+
+
